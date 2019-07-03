@@ -1,8 +1,10 @@
 import os.path
+
+
 class Config(object):
-    def __init__(self,fileName):
+    def __init__(self, filename):
         self.config = {}
-        self.readConfiguration(fileName)
+        self.readConfiguration(filename)
 
     def __getitem__(self, item):
         if not self.contains(item):
@@ -10,17 +12,17 @@ class Config(object):
             exit(-1)
         return self.config[item]
 
-    def getOptions(self,item):
+    def getOptions(self, item):
         if not self.contains(item):
             print 'parameter '+item+' is invalid!'
             exit(-1)
         return self.config[item]
 
-    def contains(self,key):
+    def contains(self, key):
         return self.config.has_key(key)
 
-    def readConfiguration(self,fileName):
-        path = '../config/'+fileName
+    def readConfiguration(self, filename):
+        path = '../config/'+filename
         if not os.path.exists(path):
             print 'config file is not found!'
             raise IOError
@@ -34,7 +36,6 @@ class Config(object):
                         print 'config file is not in the correct format! Error Line:%d'%(ind)
 
 
-
 class LineConfig(object):
     def __init__(self,content):
         self.line = content.strip().split(' ')
@@ -45,7 +46,7 @@ class LineConfig(object):
         elif self.line[0] == 'off':
             self.mainOption = False
         for i,item in enumerate(self.line):
-            if (item.startswith('-') or item.startswith('--')) and  not item[1:].isdigit():
+            if (item.startswith('-') or item.startswith('--')) and not item[1:].isdigit():
                 ind = i+1
                 for j,sub in enumerate(self.line[ind:]):
                     if (sub.startswith('-') or sub.startswith('--')) and  not sub[1:].isdigit():
@@ -58,7 +59,6 @@ class LineConfig(object):
                     self.options[item] = ' '.join(self.line[i+1:i+1+ind])
                 except IndexError:
                     self.options[item] = 1
-
 
     def __getitem__(self, item):
         if not self.contains(item):
@@ -77,5 +77,3 @@ class LineConfig(object):
 
     def contains(self,key):
         return self.options.has_key(key)
-
-

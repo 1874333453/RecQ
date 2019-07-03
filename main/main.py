@@ -5,7 +5,6 @@ from tool.config import Config
 from visual.display import Display
 
 
-
 if __name__ == '__main__':
 
     print '='*80
@@ -32,7 +31,6 @@ if __name__ == '__main__':
     print 'Baselines:'
     print 'b1. UserMean      b2. ItemMean      b3. MostPopular   b4. Rand'
 
-
     print '='*80
     algor = -1
     conf = -1
@@ -49,13 +47,13 @@ if __name__ == '__main__':
         Display(conf).render()
         exit(0)
 
-    algorthms = {'1':'UserKNN','2':'ItemKNN','3':'BasicMF','4':'SlopeOne','5':'SVD','6':'PMF',
-                 '7':'SVD++','8':'EE','9':'BPR','10':'WRMF','11':'ExpoMF',
-                 's1':'RSTE','s2':'SoRec','s3':'SoReg','s4':'SocialMF','s5':'SBPR','s6':'SREE',
-                 's7':'LOCABAL','s8':'SocialFD','s9':'TBPR','s10':'SEREC','a1':'CoFactor',
-                 'a2':'CUNE_MF','a3':'CUNE_BPR','a4':'IF_BPR',
-                 'd1':'APR','d2':'CDAE','d3':'DMF','d4':'NeuMF','d5':'CFGAN','d6':'IRGAN','d7':'SRGAN',
-                 'b1':'UserMean','b2':'ItemMean','b3':'MostPopular','b4':'Rand'}
+    algorthms = {'1': 'UserKNN', '2': 'ItemKNN', '3': 'BasicMF', '4': 'SlopeOne', '5': 'SVD', '6':'PMF',
+                 '7': 'SVD++', '8': 'EE','9': 'BPR','10':'WRMF', '11': 'ExpoMF',
+                 's1': 'RSTE','s2':'SoRec','s3':'SoReg','s4':'SocialMF', 's5': 'SBPR', 's6': 'SREE',
+                 's7': 'LOCABAL','s8':'SocialFD','s9':'TBPR','s10':'SEREC','a1':'CoFactor',
+                 'a2': 'CUNE_MF', 'a3': 'CUNE_BPR', 'a4': 'IF_BPR',
+                 'd1': 'APR','d2':'CDAE','d3':'DMF','d4':'NeuMF','d5': 'CFGAN', 'd6':'IRGAN','d7':'SRGAN',
+                 'b1': 'UserMean','b2':'ItemMean','b3':'MostPopular','b4':'Rand'}
 
     try:
         conf = Config('../config/'+algorthms[order]+'.conf')

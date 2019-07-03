@@ -6,9 +6,11 @@ from evaluation.dataSplit import DataSplit
 import os.path
 from re import split
 from collections import defaultdict
+
+
 class RatingDAO(object):
     'data access control'
-    def __init__(self,config,trainingSet, testSet):
+    def __init__(self, config, trainingSet, testSet):
         self.config = config
         self.ratingConfig = LineConfig(config['ratings.setup'])
         self.user = {} #used to store the order of users in the training set

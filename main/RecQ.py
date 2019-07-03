@@ -1,12 +1,11 @@
-import sys
-from re import split
-from tool.config import Config,LineConfig
-from tool.file import FileIO
+from tool.config import LineConfig
 from evaluation.dataSplit import *
 from multiprocessing import Process,Manager
 from tool.file import FileIO
 from time import strftime,localtime,time
 import mkl
+
+
 class RecQ(object):
     def __init__(self,config):
         self.trainingData = []  # training data
@@ -48,11 +47,6 @@ class RecQ(object):
             self.relation = FileIO.loadRelationship(config,self.config['social'])
 
         print 'preprocessing...'
-
-
-
-
-
 
     def execute(self):
         #import the algorithm module
