@@ -1,10 +1,5 @@
 import numpy as np
-from structure import sparseMatrix,new_sparseMatrix
-from tool.config import Config,LineConfig
-from tool.qmath import normalize
-from evaluation.dataSplit import DataSplit
-import os.path
-from re import split
+from tool.config import LineConfig
 from collections import defaultdict
 
 
@@ -13,40 +8,35 @@ class RatingDAO(object):
     def __init__(self, config, trainingSet, testSet):
         self.config = config
         self.ratingConfig = LineConfig(config['ratings.setup'])
-        self.user = {} #used to store the order of users in the training set
-        self.item = {} #used to store the order of items in the training set
+        self.user = {} # used to store the order of users in the training set
+        self.item = {} # {item name: item appearance id}
         self.id2user = {}
-        self.id2item = {}
+        self.id2item = {} # {item appearance id: item name}
         self.all_Item = {}
         self.all_User = {}
-        self.userMeans = {} #used to store the mean values of users's ratings
-        self.itemMeans = {} #used to store the mean values of items's ratings
+        self.userMeans = {} # used to store the mean values of users's ratings
+        self.itemMeans = {} # used to store the mean values of items's ratings
         self.globalMean = 0
         self.timestamp = {}
-        self.trainSet_u = defaultdict(dict)
-        self.trainSet_i = defaultdict(dict)
-        self.testSet_u = defaultdict(dict) # used to store the test set by hierarchy user:[item,rating]
-        self.testSet_i = defaultdict(dict) # used to store the test set by hierarchy item:[user,rating]
-        self.rScale = []
+        self.trainSet_u = defaultdict(dict) # {user name: {item name: rating} }
+        self.trainSet_i = defaultdict(dict) # {item name: {user name: rating} }
+        self.testSet_u = defaultdict(dict) # used to store the test set by hierarchy {user name: {item name: rating} }
+        self.testSet_i = defaultdict(dict) # used to store the test set by hierarchy {item: {user: rating} }
+        self.rScale = [] # rating scale
 
         self.trainingData = trainingSet[:]
         self.testData = testSet[:]
 
         self.__generateSet()
-
         self.__computeItemMean()
         self.__computeUserMean()
         self.__globalAverage()
 
-
-
     def __generateSet(self):
-        triple = []
         scale = set()
         # find the maximum rating and minimum value
-
-        for i,entry in enumerate(self.trainingData):
-            userName,itemName,rating = entry
+        for i, entry in enumerate(self.trainingData):
+            userName, itemName, rating = entry
             # makes the rating within the range [0, 1].
             #rating = normalize(float(rating), self.rScale[-1], self.rScale[0])
             #self.trainingData[i][2] = rating
@@ -67,6 +57,7 @@ class RatingDAO(object):
 
         self.all_User.update(self.user)
         self.all_Item.update(self.item)
+
         for entry in self.testData:
             userName, itemName, rating = entry
             # order the user
@@ -78,9 +69,6 @@ class RatingDAO(object):
 
             self.testSet_u[userName][itemName] = rating
             self.testSet_i[itemName][userName] = rating
-
-
-
 
     def __globalAverage(self):
         total = sum(self.userMeans.values())
@@ -108,7 +96,7 @@ class RatingDAO(object):
         for c in self.item:
             self.itemMeans[c] = sum(self.trainSet_i[c].values()) / float(len(self.trainSet_i[c]))
 
-    def getUserId(self,u):
+    def getUserId(self, u):
         if self.user.has_key(u):
             return self.user[u]
 
@@ -145,7 +133,7 @@ class RatingDAO(object):
             return False
 
     def userRated(self,u):
-        return self.trainSet_u[u].keys(),self.trainSet_u[u].values()
+        return self.trainSet_u[u].keys(), self.trainSet_u[u].values()
 
     def itemRated(self,i):
         return self.trainSet_i[i].keys(),self.trainSet_i[i].values()

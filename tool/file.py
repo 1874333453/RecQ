@@ -1,7 +1,9 @@
 import os.path
-from os import makedirs,remove
-from re import compile,findall,split
+from os import makedirs, remove
+from re import compile, findall, split
 from config import LineConfig
+
+
 class FileIO(object):
     def __init__(self):
         pass
@@ -28,7 +30,8 @@ class FileIO(object):
             remove(filePath)
 
     @staticmethod
-    def loadDataSet(conf, file, bTest=False,binarized = False, threshold = 3.0):
+    def loadDataSet(conf, bTest=False, binarized = False, threshold = 3.0):
+        filePath = conf['ratings']
         trainingData = []
         testData = []
         ratingConfig = LineConfig(conf['ratings.setup'])
@@ -36,7 +39,7 @@ class FileIO(object):
             print 'loading training data...'
         else:
             print 'loading test data...'
-        with open(file) as f:
+        with open(filePath) as f:
             ratings = f.readlines()
         # ignore the headline
         if ratingConfig.contains('-header'):
@@ -55,7 +58,7 @@ class FileIO(object):
                 userId = items[int(order[0])]
                 itemId = items[int(order[1])]
                 if len(order)<3:
-                    rating = 1 #default value
+                    rating = 1 # default value
                 else:
                     rating  = items[int(order[2])]
                 if binarized:
@@ -81,13 +84,14 @@ class FileIO(object):
             return testData
 
     @staticmethod
-    def loadRelationship(conf, filePath):
+    def loadRelationship(conf):
+        filePath = conf['social']
         socialConfig = LineConfig(conf['social.setup'])
         relation = []
         print 'loading social data...'
         with open(filePath) as f:
             relations = f.readlines()
-            # ignore the headline
+        # ignore the headline
         if socialConfig.contains('-header'):
             relations = relations[1:]
         # order of the columns
@@ -107,7 +111,3 @@ class FileIO(object):
                 weight = float(items[int(order[2])])
             relation.append([userId1, userId2, weight])
         return relation
-
-
-
-

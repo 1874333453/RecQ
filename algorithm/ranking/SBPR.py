@@ -1,15 +1,21 @@
+# coding:utf-8
 from baseclass.SocialRecommender import SocialRecommender
 from math import log
 import numpy as np
-from tool import config
 from tool.qmath import sigmoid
 from random import choice
 from collections import defaultdict
-class SBPR(SocialRecommender):
-    def __init__(self,conf,trainingSet=None,testSet=None,relation=list(),fold='[1]'):
-        super(SBPR, self).__init__(conf,trainingSet,testSet,relation,fold)
-        self.userSocialItemsSetList = defaultdict(list)
 
+
+class SBPR(SocialRecommender):
+    """2014-SBPR-CIKM
+    Leveraging Social Connections to Improve Personalized Ranking for Collaborative Filtering
+    Tong Zhao,Julian McAuley,Irwin King
+    """
+
+    def __init__(self,conf, trainingSet=None, testSet=None, relation=list(), fold='[1]'):
+        super(SBPR, self).__init__(conf, trainingSet, testSet, relation, fold)
+        self.userSocialItemsSetList = defaultdict(list)
 
     def buildModel(self):
         self.b = np.random.random(self.data.trainingSize()[1])
@@ -95,9 +101,7 @@ class SBPR(SocialRecommender):
             if self.isConverged(iteration):
                 break
 
-
     def predict(self,user,item):
-
         if self.data.containsUser(user) and self.data.containsItem(item):
             u = self.data.getUserId(user)
             i = self.data.getItemId(item)
@@ -106,7 +110,6 @@ class SBPR(SocialRecommender):
         else:
             return sigmoid(self.data.globalMean)
 
-
     def predictForRanking(self, u):
         'invoked to rank all the items for the user'
         if self.data.containsUser(u):
@@ -114,5 +117,3 @@ class SBPR(SocialRecommender):
             return self.Q.dot(self.P[u])+self.b
         else:
             return [self.data.globalMean] * self.num_items
-
-

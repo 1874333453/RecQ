@@ -2,8 +2,8 @@ from baseclass.Recommender import Recommender
 from tool import config
 import numpy as np
 from random import shuffle
-from tool.qmath import denormalize
 from evaluation.measure import Measure
+
 
 class IterativeRecommender(Recommender):
     def __init__(self,conf,trainingSet,testSet,fold='[1]'):
@@ -189,4 +189,3 @@ class IterativeRecommender(Recommender):
         print '-'*80
         #self.record.append(measure[3].strip()+' '+measure[4])
         return measure
-

@@ -43,12 +43,10 @@ class LineConfig(object):
         self.mainOption = False
         if self.line[0] == 'on':
             self.mainOption = True
-        elif self.line[0] == 'off':
-            self.mainOption = False
-        for i,item in enumerate(self.line):
+        for i, item in enumerate(self.line):
             if (item.startswith('-') or item.startswith('--')) and not item[1:].isdigit():
                 ind = i+1
-                for j,sub in enumerate(self.line[ind:]):
+                for j, sub in enumerate(self.line[ind:]):
                     if (sub.startswith('-') or sub.startswith('--')) and  not sub[1:].isdigit():
                         ind = j
                         break

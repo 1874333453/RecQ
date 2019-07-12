@@ -1,9 +1,4 @@
-import numpy as np
 from structure import sparseMatrix,new_sparseMatrix
-from tool.config import Config,LineConfig
-from tool.qmath import normalize
-import os.path
-from re import split
 
 class SocialDAO(object):
     def __init__(self,conf,relation=list()):

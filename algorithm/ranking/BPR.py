@@ -1,18 +1,18 @@
-#coding:utf8
+# coding:utf8
 from baseclass.IterativeRecommender import IterativeRecommender
-import math
-import numpy as np
-from tool import qmath
 from random import choice
 from tool.qmath import sigmoid
 from math import log
 from collections import defaultdict
+
+
 class BPR(IterativeRecommender):
+    """2009-BPR-UAI
+    BPR：Bayesian Personalized Ranking from Implicit Feedback
+    Steffen Rendle,Christoph Freudenthaler,Zeno Gantner and Lars Schmidt-Thieme
+    """
 
-    # BPR：Bayesian Personalized Ranking from Implicit Feedback
-    # Steffen Rendle,Christoph Freudenthaler,Zeno Gantner and Lars Schmidt-Thieme
-
-    def __init__(self,conf,trainingSet=None,testSet=None,fold='[1]'):
+    def __init__(self, conf, trainingSet=None, testSet=None, fold='[1]'):
         super(BPR, self).__init__(conf,trainingSet,testSet,fold)
 
     # def readConfiguration(self):
@@ -21,9 +21,7 @@ class BPR(IterativeRecommender):
     def initModel(self):
         super(BPR, self).initModel()
 
-
     def buildModel(self):
-
         print 'Preparing item sets...'
         self.PositiveSet = defaultdict(dict)
         #self.NegativeSet = defaultdict(list)
@@ -40,34 +38,37 @@ class BPR(IterativeRecommender):
         while iteration < self.maxIter:
             self.loss = 0
             for user in self.PositiveSet:
+                # draw u
                 u = self.data.user[user]
                 for item in self.PositiveSet[user]:
+                    # draw i
                     i = self.data.item[item]
-
+                    # draw j
                     item_j = choice(itemList)
-                    while (self.PositiveSet[user].has_key(item_j)):
+                    while self.PositiveSet[user].has_key(item_j):
                         item_j = choice(itemList)
                     j = self.data.item[item_j]
-                    self.optimization(u,i,j)
-
+                    # 利用draw的三元组(u,i,j)来优化模型参数
+                    self.optimization(u, i, j)
+            # 正则化项损失
             self.loss += self.regU * (self.P * self.P).sum() + self.regI * (self.Q * self.Q).sum()
             iteration += 1
             if self.isConverged(iteration):
                 break
 
-    def optimization(self,u,i,j):
+    # 模型参数优化核心部分
+    def optimization(self, u, i, j):
         s = sigmoid(self.P[u].dot(self.Q[i]) - self.P[u].dot(self.Q[j]))
-        self.P[u] += self.lRate * (1 - s) * (self.Q[i] - self.Q[j])
-        self.Q[i] += self.lRate * (1 - s) * self.P[u]
-        self.Q[j] -= self.lRate * (1 - s) * self.P[u]
-
-        self.P[u] -= self.lRate * self.regU * self.P[u]
-        self.Q[i] -= self.lRate * self.regI * self.Q[i]
-        self.Q[j] -= self.lRate * self.regI * self.Q[j]
+        # update latent features of user u
+        self.P[u] += self.lRate * ( (1 - s) * (self.Q[i] - self.Q[j]) - self.regU * self.P[u] )
+        # update latent features of item i
+        self.Q[i] += self.lRate * ( (1 - s) * self.P[u] - self.regI * self.Q[i] )
+        # update latent features of item j
+        self.Q[j] -= self.lRate * ( (1 - s) * self.P[u] - self.regI * self.Q[j] )
+        # 论文中的优化目标是最大后验概率，添加一个负号就可以转化成我们熟悉的损失函数，所以这里的损失为-log
         self.loss += -log(s)
 
-    def predict(self,user,item):
-
+    def predict(self, user, item):
         if self.data.containsUser(user) and self.data.containsItem(item):
             u = self.data.getUserId(user)
             i = self.data.getItemId(item)
@@ -76,12 +77,10 @@ class BPR(IterativeRecommender):
         else:
             return sigmoid(self.data.globalMean)
 
-    def predictForRanking(self, u):
+    def predictForRanking(self, user):
         'invoked to rank all the items for the user'
-        if self.data.containsUser(u):
-            u = self.data.getUserId(u)
+        if self.data.containsUser(user):
+            u = self.data.getUserId(user)
             return self.Q.dot(self.P[u])
         else:
             return [self.data.globalMean] * self.num_items
-
-

@@ -1,7 +1,10 @@
 import math
+
+
 class Measure(object):
     def __init__(self):
         pass
+
     @staticmethod
     def ratingMeasure(res):
         measure = []
@@ -9,7 +12,6 @@ class Measure(object):
         measure.append('MAE:'+str(mae)+'\n')
         rmse = Measure.RMSE(res)
         measure.append('RMSE:' + str(rmse)+'\n')
-
         return measure
 
     @staticmethod
@@ -137,7 +139,3 @@ class Measure(object):
         if count==0:
             return error
         return math.sqrt(float(error)/count)
-
-
-
-
