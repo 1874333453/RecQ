@@ -165,43 +165,6 @@ class Recommender(object):
             recs = sorted(item2score.items(), key=lambda items: items[1], reverse=True)
             recList[user] = recs[0:N]
 
-            # t=item2score.copy()
-            # recs = sorted(t.items(), key=lambda items: items[1], reverse=True)
-            # recList1 = {}
-            # recList1[user] = recs[0:N]
-            #
-            # Nrecommendations = []
-            # for item in item2score:
-            #     if len(Nrecommendations) < N:
-            #         Nrecommendations.append((item, item2score[item]))
-            #     else:
-            #         break
-            # Nrecommendations.sort(key=lambda d: d[1], reverse=True)
-            # recommendations = [item[1] for item in Nrecommendations]
-            # resNames = [item[0] for item in Nrecommendations]
-            # # find the K biggest scores
-            # for item in item2score:
-            #     ind = N
-            #     l = 0
-            #     r = N - 1
-            #     if recommendations[r] < item2score[item]:
-            #         while True:
-            #             mid = (l + r) / 2
-            #             if recommendations[mid] >= item2score[item]:
-            #                 l = mid + 1
-            #             elif recommendations[mid] < item2score[item]:
-            #                 r = mid - 1
-            #             if r < l:
-            #                 ind = r
-            #                 break
-            #     # ind = bisect(recommendations, item2score[item])
-            #     if ind < N - 1:
-            #         recommendations[ind + 1] = item2score[item]
-            #         resNames[ind + 1] = item
-            # recList[user] = zip(resNames, recommendations)
-            # print recList[user]
-
-
             # print a process message each 100 users
             if i % 100 == 0:
                 print self.algorName, self.foldInfo, 'progress:' + str(i) + '/' + str(num_test_users)
