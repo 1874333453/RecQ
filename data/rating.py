@@ -22,7 +22,7 @@ class RatingDAO(object):
         self.trainSet_i = defaultdict(dict) # {item name: {user name: rating} }
         self.testSet_u = defaultdict(dict) # used to store the test set by hierarchy {user name: {item name: rating} }
         self.testSet_i = defaultdict(dict) # used to store the test set by hierarchy {item: {user: rating} }
-        self.rScale = [] # rating scale
+        self.rScale = [] # rating scale which is sorted ascend
 
         self.trainingData = trainingSet[:]
         self.testData = testSet[:]

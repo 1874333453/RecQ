@@ -114,15 +114,15 @@ class Recommender(object):
             res.append(user+' '+item+' '+str(rating)+' '+str(pred)+'\n')
         currentTime = strftime("%Y-%m-%d %H-%M-%S", localtime(time()))
         # output prediction result
-        outDir = self.output['-dir']
+        output_directory = self.output['-dir']
         if self.isOutput:
             filename = self.config['recommender']+'@'+currentTime+'-rating-predictions'+self.foldInfo+'.txt'
-            FileIO.writeFile(outDir, filename, res)
-            print 'The result has been output to ',abspath(outDir),'.'
+            FileIO.writeFile(output_directory, filename, res)
+            print 'The result has been output to ',abspath(output_directory), '.'
         # output evaluation result
         filename = self.config['recommender'] + '@' + currentTime + '-measure' + self.foldInfo + '.txt'
         self.measure = Measure.ratingMeasure(self.data.testData)
-        FileIO.writeFile(outDir, filename, self.measure)
+        FileIO.writeFile(output_directory, filename, self.measure)
         print 'The result of %s %s:\n%s' % (self.algorName, self.foldInfo, ''.join(self.measure))
 
     def evalRanking(self):
@@ -176,15 +176,15 @@ class Recommender(object):
             res.append(line)
         currentTime = strftime("%Y-%m-%d %H-%M-%S", localtime(time()))
         # output prediction result
-        outDir = self.output['-dir']
+        output_directory = self.output['-dir']
         if self.isOutput:
             filename = self.config['recommender'] + '@' + currentTime + '-top-' + str(N) + 'items' + self.foldInfo + '.txt'
-            FileIO.writeFile(outDir, filename, res)
-            print 'The result has been output to ', abspath(outDir), '.'
+            FileIO.writeFile(output_directory, filename, res)
+            print 'The result has been output to ', abspath(output_directory), '.'
         # output evaluation result
         filename = self.config['recommender'] + '@' + currentTime + '-measure' + self.foldInfo + '.txt'
         self.measure = Measure.rankingMeasure(self.data.testSet_u, recList, top)
-        FileIO.writeFile(outDir, filename, self.measure)
+        FileIO.writeFile(output_directory, filename, self.measure)
         print 'The result of %s %s:\n%s' % (self.algorName, self.foldInfo, ''.join(self.measure))
 
     def execute(self):

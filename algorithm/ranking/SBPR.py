@@ -13,7 +13,7 @@ class SBPR(SocialRecommender):
     Tong Zhao,Julian McAuley,Irwin King
     """
 
-    def __init__(self,conf, trainingSet=None, testSet=None, relation=list(), fold='[1]'):
+    def __init__(self, conf, trainingSet=None, testSet=None, relation=list(), fold='[1]'):
         super(SBPR, self).__init__(conf, trainingSet, testSet, relation, fold)
         self.userSocialItemsSetList = defaultdict(list)
 

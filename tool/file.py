@@ -1,6 +1,6 @@
 import os.path
-from os import makedirs, remove
-from re import compile, findall, split
+from os import remove
+from re import split
 from config import LineConfig
 
 

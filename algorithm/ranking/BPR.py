@@ -13,7 +13,7 @@ class BPR(IterativeRecommender):
     """
 
     def __init__(self, conf, trainingSet=None, testSet=None, fold='[1]'):
-        super(BPR, self).__init__(conf,trainingSet,testSet,fold)
+        super(BPR, self).__init__(conf, trainingSet, testSet,fold)
 
     # def readConfiguration(self):
     #     super(BPR, self).readConfiguration()
